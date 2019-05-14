@@ -1335,11 +1335,32 @@ public function createperiodicjobs()
     $this->checkaccess($access);
     $data["page"]="createperiodicjobs";
     $data["title"]="View transaction";
-    $data[ 'status' ] =$this->user_model->getstatusdropdown();
+    $data[ 'status' ] =$this->user_model->getpaymentstatusdropdown();
     $data["client_id"]=$this->client_model->getdropdown();
     $data["personalloted"]=$this->transaction_model->getamsristaffdropdown();
     $data["child"]=$this->transaction_model->getchildtransactions($this->input->get("id"));
+    $data["before"]=$this->transaction_model->getperiodicbefore($this->input->get("id"));
     $this->load->view("onlytemplate",$data);
+}
+public function getsingleperiodicjobs()
+{
+    $id=$this->input->get_post("id");
+    $data["before"]=$this->transaction_model->getperiodicbefore($id);
+    $jsonData = json_encode($data["before"]);
+    echo $jsonData;
+}
+public function submitSubJobDetails()
+{
+    $id=$this->input->get_post("id");
+    $created_date=$this->input->get_post("created_date");
+    $due_date=$this->input->get_post("due_date");
+    $amount=$this->input->get_post("amount");
+    $balance=$this->input->get_post("balance");
+    $description=$this->input->get_post("description");
+    $data["jobdata"]=$this->transaction_model->submitSubJobDetails($id,$created_date,$due_date,$amount,$balance,$description);
+    echo $data["jobdata"];
+    // $jsonData = json_encode($data["before"]);
+    // echo $jsonData;
 }
 public function editperiodicjobs()
 {
@@ -1369,7 +1390,6 @@ public function deleteSelected()
     $ids = $this->input->get_post("ids");
     $deleteStatus=$this->transaction_model->deleteSelected($ids);
     echo $deleteStatus;
-    
 }
 public function viewtransaction()
 {
@@ -1436,6 +1456,12 @@ $elements[8]->field="`amsri_transaction`.`typeofjob`";
 $elements[8]->sort="1";
 $elements[8]->header="typeofjob";
 $elements[8]->alias="typeofjob";
+
+$elements[9]=new stdClass();
+$elements[9]->field="`amsri_transaction`.`status`";
+$elements[9]->sort="1";
+$elements[9]->header="status";
+$elements[9]->alias="status";
 
 
 $search=$this->input->get_post("search");
@@ -1836,6 +1862,26 @@ $this->checkaccess($access);
 $this->leads_model->delete($this->input->get("id"));
 $data["redirect"]="site/viewleads";
 $this->load->view("redirect",$data);
+}
+
+public function createinvoicelist()
+{
+    $access=array("1");
+    $this->checkaccess($access);
+    $data["page"]="createinvoicelist";
+    $data["title"]="Create invoicelist";
+    $data["jobnumber"]=$this->transaction_model->getjobnumberdropdown();
+    $this->load->view("onlytemplate",$data);
+}
+
+public function viewinvoicelist()
+{
+    $access=array("1");
+    $this->checkaccess($access);
+    $data["page"]="viewinvoicelist";
+    $data["title"]="View invoicelist";
+    // $data["jobnumber"]=$this->transaction_model->getjobnumberdropdown();
+    $this->load->view("template",$data);
 }
 
 }

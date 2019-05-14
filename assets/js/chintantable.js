@@ -6,6 +6,7 @@ function generatejquery(url,getVar) {
     $(document).ready(function () {
         // $('.modal').modal();
         // $(".modal").openModal()
+        $('select').formSelect();
         var search = $(".chintantablesearch").val();
         var pageno = 1;
         var orderby = "";

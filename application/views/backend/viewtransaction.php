@@ -23,6 +23,8 @@
     <th data-field="due_date">Due Date</th>
     <th data-field="valueofwork">Value of Work</th>
     <th data-field="amount">Amt</th>
+    <th data-field="status">Status</th>
+
 </tr>
 </thead>
 <tbody>
@@ -41,8 +43,15 @@ function drawtable(resultrow) {
     if(resultrow.typeofjob == 2) {
          listpage = "<a class='tooltipped' href='<?php echo site_url('site/createperiodicjobs?id=');?>"+resultrow.id+"' data-position='top' data-delay='50' data-tooltip='Periodic Jobs'><i class='icon-table darkblue fa fa-list-ul propericon'></i></a>";
     }
+    if(resultrow.status == 1) {
+        resultrow.status ="Open";
+    } else if(resultrow.status == 2){
+        resultrow.status ="Partial";
+    } else if(resultrow.status == 3){
+        resultrow.status ="Close";
+    }
     
-    return "<tr><td><input type='checkbox' value='" + resultrow.id + "' name='chintansideselect' onclick='chintanselectsingle()' id='" + resultrow.id + "' /><label for='" + resultrow.id + "'></label></td><td>" + resultrow.id + "</td><td>" + resultrow.jobnumber + "</td><td>" + resultrow.client_id + "</td><td>" + resultrow.personalloted + "</td><td>" + resultrow.created_date + "</td><td>" + resultrow.due_date + "</td><td>" + resultrow.valueofwork + "</td><td>" + resultrow.amount + "</td><td><a class='tooltipped' href='<?php echo site_url('site/viewonlytransaction?id=');?>"+resultrow.id+"' data-position='top' data-delay='50' data-tooltip='View'><i class='icon-table fa fa-eye propericon'></i></a><a class='tooltipped' href='<?php echo site_url('site/edittransaction?id=');?>"+resultrow.id+"' data-position='top' data-delay='50' data-tooltip='Edit'><i class='icon-table fa fa-pencil propericon green-icon'></i></a><a class='tooltipped' onclick=\"return confirm('Are you sure you want to delete?');\") href='<?php echo site_url('site/deletetransaction?id='); ?>"+resultrow.id+"' data-position='top' data-delay='50' data-tooltip='Delete'><i class='icon-table material-icons propericon red-icon '>delete</i></a><a class='tooltipped' href='<?php echo site_url('site/createinvoice?id=');?>"+resultrow.id+"' data-position='top' data-delay='50' data-tooltip='Invoice'><i class='icon-table brown-icon fa fa-file-text propericon'></i></a>" + listpage + "</td></tr>";
+    return "<tr><td><input type='checkbox' value='" + resultrow.id + "' name='chintansideselect' onclick='chintanselectsingle()' id='" + resultrow.id + "' /><label for='" + resultrow.id + "'></label></td><td>" + resultrow.id + "</td><td>" + resultrow.jobnumber + "</td><td>" + resultrow.client_id + "</td><td>" + resultrow.personalloted + "</td><td>" + resultrow.created_date + "</td><td>" + resultrow.due_date + "</td><td>" + resultrow.valueofwork + "</td><td>" + resultrow.amount + "</td><td>" + resultrow.status + "</td><td><a class='tooltipped' href='<?php echo site_url('site/viewonlytransaction?id=');?>"+resultrow.id+"' data-position='top' data-delay='50' data-tooltip='View'><i class='icon-table fa fa-eye propericon'></i></a><a class='tooltipped' href='<?php echo site_url('site/edittransaction?id=');?>"+resultrow.id+"' data-position='top' data-delay='50' data-tooltip='Edit'><i class='icon-table fa fa-pencil propericon green-icon'></i></a><a class='tooltipped' onclick=\"return confirm('Are you sure you want to delete?');\") href='<?php echo site_url('site/deletetransaction?id='); ?>"+resultrow.id+"' data-position='top' data-delay='50' data-tooltip='Delete'><i class='icon-table material-icons propericon red-icon '>delete</i></a><a class='tooltipped' href='<?php echo site_url('site/createinvoice?id=');?>"+resultrow.id+"' data-position='top' data-delay='50' data-tooltip='Invoice'><i class='icon-table brown-icon fa fa-file-text propericon'></i></a>" + listpage + "</td></tr>";
 }
 generatejquery("<?php echo $base_url;?>"); 
 var inputCheckArray = [];

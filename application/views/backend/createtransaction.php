@@ -43,36 +43,8 @@
         </label>
         <input type="text" id="source" name="source" value='<?php echo set_value('source');?>'>
       </div>
-      <div class="input-field col s12 l3">
-        <label for="invoicenumber">Invoice number
-        </label>
-        <input type="text" id="invoicenumber" name="invoicenumber" value='<?php echo set_value('invoicenumber');?>'>
-      </div>
-      <div class="input-field col s12 l3">
-        <label for="fees">Fees
-        </label>
-        <input type="text" id="fees" name="fees" value='<?php echo set_value('fees');?>'>
-      </div>
-      <div class="input-field col s12 l3">
-        <label for="claims">Claims
-        </label>
-        <input type="text" id="claims" name="claims" value='<?php echo set_value('claims');?>'>
-      </div>
-      <div class="input-field col s12 l3">
-        <label for="vat">Vat
-        </label>
-        <input type="text" id="vat" name="vat" value='<?php echo set_value('vat');?>'>
-      </div>
-      <div class="input-field col s12 l3">
-        <label for="amount">Amount
-        </label>
-        <input type="text" id="amount" name="amount" value='<?php echo set_value('amount');?>'>
-      </div>
-      <div class="input-field col s12 l3">
-        <label for="balance">Balance
-        </label>
-        <input type="text" id="balance" name="balance" value='<?php echo set_value('balance');?>'>
-      </div>
+      
+      
       <div class="input-field col s12 l3 " id="typeofjob">
         <!-- <div id="typeofjob"> -->
           <?php echo form_dropdown("typeofjob",$typeofjob,set_value('typeofjob'));?>
@@ -110,7 +82,39 @@
         </textarea>
       </div>
     </div>
-  
+    <h4>Amount Details</h4>
+    <div class="row">
+    <div class="input-field col s12 l3">
+        <label for="invoicenumber">Invoice number
+        </label>
+        <input type="text" id="invoicenumber" name="invoicenumber" value='<?php echo set_value('invoicenumber');?>'>
+      </div>
+      <div class="input-field col s12 l3">
+        <label for="fees">Fees
+        </label>
+        <input type="text" id="fees" name="fees" value='<?php echo set_value('fees');?>'>
+      </div>
+      <div class="input-field col s12 l3">
+        <label for="claims">Claims
+        </label>
+        <input type="text" id="claims" name="claims" value='<?php echo set_value('claims');?>'>
+      </div>
+      <div class="input-field col s12 l3">
+        <label for="vat">Vat
+        </label>
+        <input type="text" id="vat" name="vat" value='<?php echo set_value('vat');?>'>
+      </div>
+      <div class="input-field col s12 l3">
+        <label for="amount">Amount
+        </label>
+        <input type="text" id="amount" name="amount" value='<?php echo set_value('amount');?>'>
+      </div>
+      <div class="input-field col s12 l3">
+        <label for="balance">Balance
+        </label>
+        <input type="text" id="balance" name="balance" value='<?php echo set_value('balance');?>'>
+      </div>
+    </div>
     <div class="row">
       <div class="col s6">
         <button type="submit" class="btn btn-primary waves-effect waves-light  blue darken-4">Save

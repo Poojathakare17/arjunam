@@ -92,7 +92,7 @@ if($flag){
           <label>Work
           </label>
           <textarea name="typeofwork"  placeholder="Enter text ..." class="materialize-textarea">
-            <?php echo set_value( 'typeofwork',$before->typeofwork);?>
+            <?php echo set_value( 'typeofwork',ltrim($before->typeofwork,''));?>
           </textarea>
         </div>
         <div class="col s12 l3">
@@ -111,15 +111,11 @@ if($flag){
         </div>
     </div>
   
-      
+    <h4>Amount Details</h4>
 
 
-      <ul class="collapsible">
-          <li>
-          <div class="collapsible-header"><i class="material-icons">filter_drama</i><span style="font-size: 20px;">Amount Details</span></div>
-          <div class="collapsible-body pad-left-15">
-          <div>
-            <div class="input-field col s12 l3">
+       <div class="row">
+       <div class="input-field col s12 l3">
               <label for="invoicenumber">Invoice number
               </label>
               <input type="text" id="invoicenumber" name="invoicenumber" value='<?php echo set_value('invoicenumber',$before->invoicenumber);?>'>
@@ -149,25 +145,9 @@ if($flag){
               </label>
               <input type="text" id="balance" name="balance" value='<?php echo set_value('balance',$before->balance);?>'>
             </div>
-          </div>
-        
-          </div>
-        </li>
-        <!-- <li>
-          <div class="collapsible-header"><i class="material-icons">place</i>Second</div>
-          <div class="collapsible-body pad-left-15"><span>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</span></div>
-        </li>
-        <li>
-          <div class="collapsible-header"><i class="material-icons">whatshot</i>Third</div>
-          <div class="collapsible-body pad-left-15"><span>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</span></div>
-        </li> -->
-      </ul>
-
-   
-      <!-- </div> -->
+       </div>
+           
       
- 
-    </div>
   
   
   

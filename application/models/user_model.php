@@ -208,6 +208,7 @@ class User_model extends CI_Model
 	{
 		$query=$this->db->query("SELECT * FROM `amsri_paymentstatus`  ORDER BY `id` ASC")->result();
 		$return=array(
+			"0"=>"Select Status"
 		);
 		foreach($query as $row)
 		{

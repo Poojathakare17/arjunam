@@ -5,7 +5,7 @@ class transaction_model extends CI_Model
 {
 public function create($client_id,$created_date,$due_date,$dept,$personalloted,$source,$valueofwork,$invoicenumber,$fees,$claims,$vat,$amount,$balance,$typeofjob,$periodicity,$typeofwork,$periodofassignment,$description)
 {
-    $data=array("client_id" => $client_id,"created_date" => $created_date,"due_date" => $due_date,"dept" => $dept,"personalloted" => $personalloted,"source" => $source,"valueofwork" => $valueofwork,"personalloted" => $personalloted,"source" => $source,"valueofwork" => $valueofwork,"invoicenumber" => $invoicenumber,"fees" => $fees,"claims" => $claims,"vat" => $vat,"amount" => $amount,"balance" => $balance,"typeofjob" => $typeofjob,"periodicity" => $periodicity,"typeofwork" => $typeofwork,"periodofassignment" => $periodofassignment,"description" => $description);
+    $data=array("client_id" => $client_id,"created_date" => $created_date,"due_date" => $due_date,"dept" => $dept,"personalloted" => $personalloted,"source" => $source,"valueofwork" => $valueofwork,"personalloted" => $personalloted,"source" => $source,"valueofwork" => $valueofwork,"invoicenumber" => $invoicenumber,"fees" => $fees,"claims" => $claims,"vat" => $vat,"amount" => $amount,"balance" => $balance,"typeofjob" => $typeofjob,"periodicity" => $periodicity,"typeofwork" => trim($typeofwork),"periodofassignment" => $periodofassignment,"description" => trim($description));
     $query=$this->db->insert( "amsri_transaction", $data );
     $mainid=$this->db->insert_id();
 
@@ -14,7 +14,7 @@ public function create($client_id,$created_date,$due_date,$dept,$personalloted,$
 
             $data=array("client_id" => $client_id,"dept" => $dept,"personalloted" => $personalloted,"source" => $source,"valueofwork" => $valueofwork,"personalloted" => $personalloted,"source" => $source,"valueofwork" => $valueofwork,"invoicenumber" => $invoicenumber,"fees" => $fees,"claims" => $claims,"vat" => $vat,"amount" => $amount,"balance" => $balance,"typeofjob" => $typeofjob,"periodicity" => $periodicity,"typeofwork" => $typeofwork,"periodofassignment" => $periodofassignment,"description" => $description, "parent" => $mainid);
             $query1=$this->db->insert( "amsri_transaction", $data );
-        }
+        } 
         
     }
 
@@ -31,13 +31,27 @@ public function beforeedit($id)
 }
 
 public function getchildtransactions($id) {
-    $query = $this->db->query("SELECT `amsri_transaction`.`id`, CONCAT('AMS', LPAD(`amsri_transaction`.`id`, '4', '0')) as 'jobnumber', `amsri_transaction`.`created_date`, `amsri_client`.`projectname`, `amsri_transaction`.`due_date`,`amsri_transaction`.`status`, `amsri_contact`.`name` as `personalloted`, `amsri_transaction`.`valueofwork`, `amsri_transaction`.`amount`,`amsri_transaction`.`status` FROM (`amsri_transaction`) 
+    $query = $this->db->query("SELECT `amsri_transaction`.`id`, CONCAT('AMS', LPAD(`amsri_transaction`.`id`, '4', '0')) as 'jobnumber', `amsri_transaction`.`created_date`, `amsri_client`.`projectname`, `amsri_transaction`.`due_date`,`amsri_transaction`.`balance`,`amsri_transaction`.`status`, `amsri_contact`.`name` as `personalloted`, `amsri_transaction`.`valueofwork`, `amsri_transaction`.`amount`,`amsri_transaction`.`status` FROM (`amsri_transaction`) 
     LEFT JOIN `amsri_client` ON `amsri_client`.`client_id`=`amsri_transaction`.`client_id` 
     LEFT JOIN `amsri_contact` ON `amsri_contact`.`contact_id`=`amsri_transaction`.`personalloted` 
     WHERE `amsri_transaction`.`id` = $id OR `amsri_transaction`.`parent` = $id")->result();
-    
     return $query;
+}
 
+public function getperiodicbefore($id){
+    $query = $this->db->query("SELECT * FROM `amsri_transaction` WHERE `id`=$id")->row();
+    return $query;
+}
+public function submitSubJobDetails($id,$created_date,$due_date,$amount,$balance,$description) {
+    $data=array("created_date" => $created_date,"due_date" => $due_date,"amount" => $amount,"description" => trim($description),"balance" => $balance);
+    $this->db->where( "id", $id );
+    $query=$this->db->update( "amsri_transaction", $data );
+    if($query){
+        return 1;
+    } else {
+        return 0;
+    }
+    
 }
 public function deleteSelected($ids)
 {
@@ -102,7 +116,7 @@ public function edit($id,$client_id,$created_date,$due_date,$dept,$personalloted
     $invoice=$this->transaction_model->getsingletransaction($id);
     $invoice=$invoice->invoice;
     }
-    $data=array("client_id" => $client_id,"created_date" => $created_date,"due_date" => $due_date,"dept" => $dept,"personalloted" => $personalloted,"source" => $source,"valueofwork" => $valueofwork,"personalloted" => $personalloted,"source" => $source,"valueofwork" => $valueofwork,"invoicenumber" => $invoicenumber,"fees" => $fees,"claims" => $claims,"vat" => $vat,"amount" => $amount,"balance" => $balance,"typeofjob" => $typeofjob,"periodicity" => $periodicity,"typeofwork" => $typeofwork,"periodofassignment" => $periodofassignment,"description" => $description,"parent" => $parent);
+    $data=array("client_id" => $client_id,"created_date" => $created_date,"due_date" => $due_date,"dept" => $dept,"personalloted" => $personalloted,"source" => $source,"valueofwork" => $valueofwork,"personalloted" => $personalloted,"source" => $source,"valueofwork" => $valueofwork,"invoicenumber" => $invoicenumber,"fees" => $fees,"claims" => $claims,"vat" => $vat,"amount" => $amount,"balance" => $balance,"typeofjob" => $typeofjob,"periodicity" => $periodicity,"typeofwork" => $typeofwork,"periodofassignment" => $periodofassignment,"description" => trim($description),"parent" => $parent);
     $this->db->where( "id", $id );
     $query=$this->db->update( "amsri_transaction", $data );
     return 1;
