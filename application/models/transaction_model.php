@@ -29,9 +29,19 @@ public function beforeedit($id)
     $query=$this->db->get("amsri_transaction")->row();
     return $query;
 }
+public function getselectedjobnumberlist($ids) {
+    $query = $this->db->query("SELECT `amsri_transaction`.`id`, CONCAT('AM', LPAD(`amsri_transaction`.`id`, '5', '0')) as 'jobnumber', `amsri_transaction`.`created_date`, `amsri_client`.`projectname`, `amsri_transaction`.`due_date`,`amsri_transaction`.`balance`,`amsri_transaction`.`status`, `amsri_contact`.`name` as `personalloted`, `amsri_transaction`.`valueofwork`, `amsri_transaction`.`amount`,`amsri_transaction`.`status` FROM (`amsri_transaction`) 
+    LEFT JOIN `amsri_client` ON `amsri_client`.`client_id`=`amsri_transaction`.`client_id` 
+    LEFT JOIN `amsri_contact` ON `amsri_contact`.`contact_id`=`amsri_transaction`.`personalloted` 
+    WHERE `amsri_transaction`.`id` IN ($ids)")->result();
+    if(!$query)
+    return  0;
+    else
+    return  $query;
+}
 
 public function getchildtransactions($id) {
-    $query = $this->db->query("SELECT `amsri_transaction`.`id`, CONCAT('AMS', LPAD(`amsri_transaction`.`id`, '4', '0')) as 'jobnumber', `amsri_transaction`.`created_date`, `amsri_client`.`projectname`, `amsri_transaction`.`due_date`,`amsri_transaction`.`balance`,`amsri_transaction`.`status`, `amsri_contact`.`name` as `personalloted`, `amsri_transaction`.`valueofwork`, `amsri_transaction`.`amount`,`amsri_transaction`.`status` FROM (`amsri_transaction`) 
+    $query = $this->db->query("SELECT `amsri_transaction`.`id`, CONCAT('AM', LPAD(`amsri_transaction`.`id`, '5', '0')) as 'jobnumber', `amsri_transaction`.`created_date`, `amsri_client`.`projectname`, `amsri_transaction`.`due_date`,`amsri_transaction`.`balance`,`amsri_transaction`.`status`, `amsri_contact`.`name` as `personalloted`, `amsri_transaction`.`valueofwork`, `amsri_transaction`.`amount`,`amsri_transaction`.`status` FROM (`amsri_transaction`) 
     LEFT JOIN `amsri_client` ON `amsri_client`.`client_id`=`amsri_transaction`.`client_id` 
     LEFT JOIN `amsri_contact` ON `amsri_contact`.`contact_id`=`amsri_transaction`.`personalloted` 
     WHERE `amsri_transaction`.`id` = $id OR `amsri_transaction`.`parent` = $id")->result();
@@ -165,7 +175,7 @@ public function getjobnumberdropdown(){
     }
     
     public function getinvoices($id){
-        $query = $this->db->query("SELECT * FROM `amsri_invoice` WHERE  `transactionid`='$id'")->result();
+        $query = $this->db->query("SELECT `id`, `invoiceupload`, `invoicenumber`, `invoiceamount` FROM `amsri_invoicelist` WHERE `id` IN (SELECT `invoiceid` FROM `amsri_invoicejobnumber` WHERE `jobnumber` = $id)")->result();
         return $query;
     }
 
@@ -194,6 +204,48 @@ public function getjobnumberdropdown(){
             } else{
                 return 0;
             }
+    }
+
+    public function createinvoicelistsubmit($image) {
+        $postdata = $_POST;
+        // print_r($postdata);
+        $invoiceupload = $image;
+        if($this->input->get_post('invoiceamount')){
+            $invoiceamount = $this->input->get_post('invoiceamount');
+        }
+        if($this->input->get_post('invoicenumber')){
+            $invoicenumber = $this->input->get_post('invoicenumber');
+        }
+        $data=array("invoiceupload" => $invoiceupload,"invoiceamount" => $invoiceamount,"invoicenumber" => $invoicenumber);
+        $query=$this->db->insert( "amsri_invoicelist", $data );
+        $invoiceid=$this->db->insert_id();
+
+        foreach($postdata as $key=>$value) {
+            if (strpos($key, 'payment') !== false)  {
+                //get id from each payment
+                $id = substr($key, 8);
+                //update amount in main table
+                $data=array("amount" => $value);
+                $this->db->where( "id", $id );
+                $updatequery=$this->db->update( "amsri_transaction", $data );
+                if(!$updatequery)
+                return  0;
+
+                $data=array("jobnumber" => $id,"invoiceid" => $invoiceid);
+                $insertjobnumber=$this->db->insert( "amsri_invoicejobnumber", $data );
+                $invoicejobnumberid=$this->db->insert_id();
+                if(!$invoicejobnumberid)
+                return  0;
+            }   
+
+        }
+        // die();
+
+
+        if(!$query)
+        return  0;
+        else
+        return  $id;
     }
 }
 ?>

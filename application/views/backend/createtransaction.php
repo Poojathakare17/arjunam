@@ -84,11 +84,11 @@
     </div>
     <h4>Amount Details</h4>
     <div class="row">
-    <div class="input-field col s12 l3">
+    <!-- <div class="input-field col s12 l3">
         <label for="invoicenumber">Invoice number
         </label>
         <input type="text" id="invoicenumber" name="invoicenumber" value='<?php echo set_value('invoicenumber');?>'>
-      </div>
+      </div> -->
       <div class="input-field col s12 l3">
         <label for="fees">Fees
         </label>
@@ -105,7 +105,7 @@
         <input type="text" id="vat" name="vat" value='<?php echo set_value('vat');?>'>
       </div>
       <div class="input-field col s12 l3">
-        <label for="amount">Amount
+        <label for="amount">Amount Paid
         </label>
         <input type="text" id="amount" name="amount" value='<?php echo set_value('amount');?>'>
       </div>

@@ -1404,7 +1404,7 @@ function viewtransactionjson()
 {
 $elements=array();
 $elements[0]=new stdClass();
-$elements[0]->field="CONCAT('AMS',LPAD(`amsri_transaction`.`id`,4,0))";
+$elements[0]->field="CONCAT('AM',LPAD(`amsri_transaction`.`id`,5,0))";
 $elements[0]->sort="1";
 $elements[0]->header="Job No";
 $elements[0]->alias="jobnumber";
@@ -1870,8 +1870,46 @@ public function createinvoicelist()
     $this->checkaccess($access);
     $data["page"]="createinvoicelist";
     $data["title"]="Create invoicelist";
-    $data["jobnumber"]=$this->transaction_model->getjobnumberdropdown();
     $this->load->view("onlytemplate",$data);
+}
+
+public function createinvoicelistsubmit()
+{
+    $access=array("1");
+    $this->checkaccess($access);
+    // print_r($_POST);
+    // echo "before upload";
+    // $image=$this->input->get_post("image");
+    $config['upload_path'] = './uploads/';
+    $config['allowed_types'] = 'gif|jpg|png|jpeg';
+    $this->load->library('upload', $config);
+                $filename = "image";
+                $image = "";
+                if ($this->upload->do_upload($filename)) {
+                    $uploaddata = $this->upload->data();
+                    $image = $uploaddata['file_name'];
+                    $config_r['source_image'] = './uploads/' . $uploaddata['file_name'];
+                    $config_r['maintain_ratio'] = TRUE;
+                    $config_t['create_thumb'] = FALSE; ///add this
+                    $config_r['width'] = 800;
+                    $config_r['height'] = 800;
+                    $config_r['quality'] = 100;
+                    //end of configs
+                    $this->load->library('image_lib', $config_r);
+                    $this->image_lib->initialize($config_r);
+                    if (!$this->image_lib->resize()) {
+                        echo "Failed." . $this->image_lib->display_errors();
+                        
+                    } else {
+                        $image = $this->image_lib->dest_image;
+                        
+                    }
+                }
+                
+    $data['addinvoice'] = $this->transaction_model->createinvoicelistsubmit($image);
+    $data["redirect"]="site/viewinvoicelist";
+    $this->load->view("redirect",$data);
+    
 }
 
 public function viewinvoicelist()
@@ -1880,9 +1918,23 @@ public function viewinvoicelist()
     $this->checkaccess($access);
     $data["page"]="viewinvoicelist";
     $data["title"]="View invoicelist";
-    // $data["jobnumber"]=$this->transaction_model->getjobnumberdropdown();
+    $data["invoicelist"]=$this->invoicelist_model->getinvoicelist();
     $this->load->view("template",$data);
 }
+
+public function redirectToInvoice()
+{
+    $access=array("1");
+    $this->checkaccess($access);
+    $data["page"]="createinvoicelist";
+    $data["title"]="Create invoicelist";
+    $jobnumid = $this->input->get_post('id');
+    $data["jobnumberlist"]=$this->transaction_model->getselectedjobnumberlist($jobnumid);
+    // print_r($data["jobnumberlist"]);
+    $this->load->view("onlytemplate",$data);
+}
+
+
 
 }
 ?>

@@ -115,11 +115,11 @@ if($flag){
 
 
        <div class="row">
-       <div class="input-field col s12 l3">
+       <!-- <div class="input-field col s12 l3">
               <label for="invoicenumber">Invoice number
               </label>
               <input type="text" id="invoicenumber" name="invoicenumber" value='<?php echo set_value('invoicenumber',$before->invoicenumber);?>'>
-            </div>
+            </div> -->
             <div class="input-field col s12 l3">
               <label for="fees">Fees
               </label>

@@ -1,8 +1,8 @@
 <div class="row">
 <div class="col s12">
-<h4 class="pad-left-15 capitalize"> Add Invoices</h4>
+<!-- <h4 class="pad-left-15 capitalize"> Add Invoices</h4> -->
 </div>
-<form class='col s12' method='post' action='<?php echo site_url("site/createinvoicesubmit?id=".$this->input->get('id'));?>' enctype= 'multipart/form-data'>
+<!-- <form class='col s12' method='post' action='<?php echo site_url("site/createinvoicesubmit?id=".$this->input->get('id'));?>' enctype= 'multipart/form-data'>
 <div class="row">
     <div class="file-field input-field col s12 l3">
     <div class="btn blue darken-4">
@@ -20,7 +20,7 @@
 <a href="<?php echo site_url("site/viewtransaction"); ?>" class="btn btn-secondary waves-effect waves-light red">Cancel</a>
 </div>
 </div>
-</form>
+</form> -->
 </div>
 <!-- <div class="col s12 l3 ">
       <h5 class="pad-left-15 ">View Invoices</h5>
@@ -45,13 +45,16 @@
       <div class="col s12 m6 l2">
          <div class="card">
          <div class="card-image">
-         <a class="img-center1" href="<?php echo base_url('uploads')."/".$row->image; ?>">
-            <img src="<?php echo base_url('uploads')."/".$row->image; ?>" height="160px" width="297px">
+         <a class="img-center1" href="<?php echo base_url('uploads')."/".$row->invoiceupload; ?>">
+            <img src="<?php echo base_url('uploads')."/".$row->invoiceupload; ?>" height="160px" width="297px">
             </a>
          </div>
+         <div class="card-action">
+         <span><b>Invoice No.</b> <?php echo $row->invoicenumber;?></span>
+         </div>
          <div class="card-action" style="text-align: center">
-          <a href="<?php echo base_url('uploads')."/".$row->image; ?>" class="tooltipped" data-position="top" data-delay="50" data-tooltip="Open in new tab" style="color: #0D47A1;padding-right: 5px;padding-left: 5px;" target="_blank"><i class="material-icons">launch</i></a>
-          <a href="<?php echo base_url('uploads')."/".$row->image; ?>" class="tooltipped" data-position="top" data-delay="50" data-tooltip="Download Invoice" download="invoice_<?php echo $before->id;?>_<?php echo $i?>" style="color: #45c445;padding-right: 5px;padding-left: 5px;"><i class="material-icons">file_download</i></a>
+          <a href="<?php echo base_url('uploads')."/".$row->invoiceupload; ?>" class="tooltipped" data-position="top" data-delay="50" data-tooltip="Open in new tab" style="color: #0D47A1;padding-right: 5px;padding-left: 5px;" target="_blank"><i class="material-icons">launch</i></a>
+          <a href="<?php echo base_url('uploads')."/".$row->invoiceupload; ?>" class="tooltipped" data-position="top" data-delay="50" data-tooltip="Download Invoice" download="invoice_<?php echo $before->id;?>_<?php echo $i?>" style="color: #45c445;padding-right: 5px;padding-left: 5px;"><i class="material-icons">file_download</i></a>
           <span id="<?php echo $row->id;?>" class="tooltipped" data-position="top" data-delay="50" data-tooltip="Delete Invoice" style="color: #F44336;padding-right: 5px;padding-left: 5px;" onclick="deleteImage(this)"><i class="material-icons">delete</i></span>
         </div>
          </div>

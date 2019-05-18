@@ -5,8 +5,9 @@
 <?php $this->chintantable->createsearch("Job Numbers");?>
 
 <div class="row col l6 s6 m6" style="float: right;
-    margin-right: -377px;">
+    margin-right: -230px;">
     <!-- <div class="col l2"> -->
+       <button class="btn btn-primary waves-effect waves-light  blue darken-4" id="create-invoice" >Create Invoice</button>
        <button class="btn btn-primary waves-effect waves-light  blue darken-4" id="delete-selected" >Delete Selected</button>
     <!-- </div> -->
 </div>
@@ -51,7 +52,7 @@ function drawtable(resultrow) {
         resultrow.status ="Close";
     }
     
-    return "<tr><td><input type='checkbox' value='" + resultrow.id + "' name='chintansideselect' onclick='chintanselectsingle()' id='" + resultrow.id + "' /><label for='" + resultrow.id + "'></label></td><td>" + resultrow.id + "</td><td>" + resultrow.jobnumber + "</td><td>" + resultrow.client_id + "</td><td>" + resultrow.personalloted + "</td><td>" + resultrow.created_date + "</td><td>" + resultrow.due_date + "</td><td>" + resultrow.valueofwork + "</td><td>" + resultrow.amount + "</td><td>" + resultrow.status + "</td><td><a class='tooltipped' href='<?php echo site_url('site/viewonlytransaction?id=');?>"+resultrow.id+"' data-position='top' data-delay='50' data-tooltip='View'><i class='icon-table fa fa-eye propericon'></i></a><a class='tooltipped' href='<?php echo site_url('site/edittransaction?id=');?>"+resultrow.id+"' data-position='top' data-delay='50' data-tooltip='Edit'><i class='icon-table fa fa-pencil propericon green-icon'></i></a><a class='tooltipped' onclick=\"return confirm('Are you sure you want to delete?');\") href='<?php echo site_url('site/deletetransaction?id='); ?>"+resultrow.id+"' data-position='top' data-delay='50' data-tooltip='Delete'><i class='icon-table material-icons propericon red-icon '>delete</i></a><a class='tooltipped' href='<?php echo site_url('site/createinvoice?id=');?>"+resultrow.id+"' data-position='top' data-delay='50' data-tooltip='Invoice'><i class='icon-table brown-icon fa fa-file-text propericon'></i></a>" + listpage + "</td></tr>";
+    return "<tr><td><input type='checkbox' value='" + resultrow.id + "' name='chintansideselect' onclick='chintanselectsingle()' id='" + resultrow.id + "' /><label for='" + resultrow.id + "'></label></td><td>" + resultrow.id + "</td><td>" + resultrow.jobnumber + "</td><td>" + resultrow.client_id + "</td><td>" + resultrow.personalloted + "</td><td>" + resultrow.created_date + "</td><td>" + resultrow.due_date + "</td><td>" + resultrow.valueofwork + "</td><td>" + resultrow.amount + "</td><td>" + resultrow.status + "</td><td><a class='tooltipped' href='<?php echo site_url('site/viewonlytransaction?id=');?>"+resultrow.id+"' data-position='top' data-delay='50' data-tooltip='View'><i class='icon-table fa fa-eye propericon'></i></a><a class='tooltipped' href='<?php echo site_url('site/edittransaction?id=');?>"+resultrow.id+"' data-position='top' data-delay='50' data-tooltip='Edit'><i class='icon-table fa fa-pencil propericon green-icon'></i></a><a class='tooltipped' onclick=\"return confirm('Are you sure you want to delete?');\") href='<?php echo site_url('site/deletetransaction?id='); ?>"+resultrow.id+"' data-position='top' data-delay='50' data-tooltip='Delete'><i class='icon-table material-icons propericon red-icon '>delete</i></a><a class='tooltipped' href='<?php echo site_url('site/createinvoice?id=');?>"+resultrow.id+"' data-position='top' data-delay='50' data-tooltip='View Invoice'><i class='icon-table brown-icon fa fa-file-text propericon'></i></a>" + listpage + "</td></tr>";
 }
 generatejquery("<?php echo $base_url;?>"); 
 var inputCheckArray = [];
@@ -80,6 +81,17 @@ function chintanselectsingle(){
                 }
             }
     });
+    $("#create-invoice").click(function() {
+        if(inputCheckArray.length!=0) {
+                for(var i=0;i<inputCheckArray.length; i++){
+                ids.push(inputCheckArray[i]['id']);
+            }
+            window.location.href = "redirectToInvoice?id="+ ids;
+        } else if(selectallid.length !=0){
+            window.location.href = "redirectToInvoice?id="+ selectallid;
+
+        }
+    });
     $("#chintanselectall").click(function() {
         var singleid = 0;
         var allids = $('input:checkbox').not(this).prop('checked', this.checked);
@@ -88,6 +100,7 @@ function chintanselectsingle(){
             selectallid.push(singleid);
          }
     });
+ 
 function ajaxCall(ids) {
     console.log("ids "+ids);
     $.ajax({

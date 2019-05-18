@@ -6,18 +6,14 @@
 	<link rel="shortcut icon" type="image/x-icon" href="<?php echo base_url('assets').'/';?>img/favicon.ico">
     <!--Let browser know website is optimized for mobile-->
     <link rel="stylesheet" href="<?php echo base_url('assets').'/';?>bower_components/Materialize/dist/css/materialize.css">
+	<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css"> -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="<?php echo base_url('assets').'/';?>css/style.css" rel="stylesheet">
     <link href="<?php echo base_url('assets').'/';?>css/font-awesome.min.css" rel="stylesheet">
     <link href="<?php echo base_url('assets').'/';?>css/jquery.fancybox.css" rel="stylesheet">
     <link rel="stylesheet" href="<?php echo base_url('assets').'/';?>css/linearfonts.css">
-    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"> -->
-  
-    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script> -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
     <script src="<?php echo base_url('assets').'/';?>bower_components/Materialize/dist/js/materialize.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-    <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.7/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.7/js/select2.min.js"></script> -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 
@@ -141,21 +137,68 @@
     </header>
     <main>
 
-<div class="row">
-    <div class="col s12">
-        <h4 class="pad-left-15 capitalize">Add Invoice</h4>
+	<div class="row">
+		<div class="col s12">
+			<h4 class="pad-left-15 capitalize">Add Invoice
+			</h4>
+		</div>
+	<form action="<?php echo site_url('site/createinvoicelistsubmit');?>" method="post" enctype= 'multipart/form-data'>
+		<div class="row">
+				<div class="col s2">Sr no</div>
+				<div class="col s2">Job Number</div>
+				<div class="col s2">Value of Work</div>
+				<div class="col s2">Balance</div>
+				<div class="col s2">Amount</div>
+		</div>
+		<hr>
+		<?php $i=1;?>
+			<?php foreach ($jobnumberlist as $singleJobNum) { ?>
+			<div class="row">
+				<div class="col s2"><?php echo $i;?></div>
+				<div class="col s2"><?php echo $singleJobNum->jobnumber;?></div>
+				<div class="col s2"><?php echo $singleJobNum->valueofwork;?></div>
+				<div class="col s2"><?php echo $singleJobNum->balance;?></div>
+				<div class="col s2">
+					<input placeholder="Enter Amount" id="first_name" name="<?php echo "payment_".$singleJobNum->id;?>" type="text" required class="validate">
+				</div>
+				
+			</div>
+			<hr>
+			<?php
+				$i++;
+			}?>
+			<div class="row">
+					<div class="file-field input-field col s12 l3">
+						<div class="btn blue darken-4">
+						<span>Upload Invoice</span>
+						<input type="file" name="image">
+						</div>
+						<div class="file-path-wrapper">
+						<input class="file-path validate" type="text" placeholder="Upload Invoice" value='<?php echo set_value('image');?>'>
+						</div>
+					</div>
+					<div class="input-field col l3 s12">
+						<input id="icon_prefix" type="text" class="validate" name="invoiceamount" required>
+						<label for="icon_prefix">Total Invoice Amount</label>
+					</div>
+					<div class="input-field col l3 s12">
+						<input id="icon_prefix" type="text" class="validate" name="invoicenumber" required>
+						<label for="icon_prefix">Invoice Number</label>
+					</div>
+			</div>
+			<div class="row">
+				<div class="col s6 m6">
+					<button type="submit"  class="btn btn-primary waves-effect waves-light blue darken-4">Save</button>
+					<a href="<?php echo site_url("site/viewtransaction"); ?>" class="btn btn-secondary waves-effect waves-light red">Cancel</a>
+				</div>
+			</div>
+
+	</form>
+      <!-- <div class="col s3">6-columns (one-half)</div>
+      <div class="col s3">6-columns (one-half)</div>
+      <div class="col s3">6-columns (one-half)</div>
+	  <div class="col s3">6-columns (one-half)</div> -->
     </div>
-    <div class="input-field col s12">
-    <select multiple>
-      <option value="" disabled selected>Choose your option</option>
-      <option value="1">Option 1</option>
-      <option value="2">Option 2</option>
-      <option value="3">Option 3</option>
-    </select>
-    <label>Materialize Multiple Select</label>
-  </div>
-    
-</div>
 
 
 <!-- End Date Modal Starts -->
@@ -163,9 +206,10 @@
 </body>
 </html>
 <script>
-$( document ).ready(function() {
-    $('select').formSelect();
-});
+         function showToast(message, duration) {
+            Materialize.toast(message, duration);
+         }
+      
 
 </script>
 
