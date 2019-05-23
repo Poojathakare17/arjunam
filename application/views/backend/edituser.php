@@ -3,25 +3,26 @@
 		<h4 class="pad-left-15">Edit User</h4>
 	</div>
 </div>
+<span class="validation-error"><?php echo $alerterror;?></span>
 <div class="row">
 	<form class="col s12" method="post" action="<?php echo site_url('site/editusersubmit');?>" enctype="multipart/form-data">
 		<input type="hidden" id="normal-field" class="form-control" name="id" value="<?php echo set_value('id',$before->id);?>" style="display:none;">
 
 	
 			<div class="input-field col m3 s12">
-				<label>Name</label>
+				<label>Name *</label>
 				<input type="text" name="name" value="<?php echo set_value('name',$before->name);?>">
 			</div>
 	
 		
 			<div class="input-field col m3 s12">
-				<label for="email">Email</label>
+				<label for="email">Email *</label>
 				<input type="email" id="normal-field" class="form-control" name="email" value="<?php echo set_value('email',$before->email);?>">
 			</div>
 	
 			<div class="input-field col m3 s12">
 				<input type="password" name="password" value="" id="password">
-				<label for="password">Password</label>
+				<label for="password">Password *</label>
 			</div>
 	
 			<!-- <div class="input-field col m3 s12">
@@ -37,7 +38,7 @@
 			</div>
 
 			<div class="input-field col m3 s12">
-				<label for="mobile">Mobile</label>
+				<label for="mobile">Mobile *</label>
 				<input type="text" id="mobile" name="mobile" value="<?php echo set_value('mobile',$before->mobile);?>">
 			</div>
 		
@@ -48,7 +49,7 @@
 		
 			<div class="input-field col m3 s12">
 				<?php echo form_dropdown( 'accesslevel',$accesslevel,set_value( 'accesslevel',$before->accesslevel)); ?>
-					<label>Access Level</label>
+					<label>Access Level  *</label>
 			</div>
 	
 		
@@ -69,7 +70,7 @@
 			</div>
 			<div class="input-field col m3 s12">
 				<?php echo form_dropdown( 'dept',$dept,set_value( 'dept',$before->dept)); ?>
-					<label>Department</label>
+					<label>Department *</label>
 			</div>
 			</div>
 			<div class="row">

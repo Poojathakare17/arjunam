@@ -4,6 +4,7 @@
     </h4>
   </div>
 </div>
+<span class="validation-error"><?php echo $alerterror;?></span>
 <div class="row">
 <?php
 if($before->parent){
@@ -34,7 +35,7 @@ if($flag){
     <div class="row">
       <div class="input-field col l3 s12">
         <?php echo form_dropdown("client_id",$client_id,set_value('client_id',$before->client_id));?>
-        <label>Client Name
+        <label>Client Name *
         </label>
       </div>
       <div class="input-field col s12 l3">
@@ -49,26 +50,22 @@ if($flag){
       </div>
       <div class="input-field col s12 l3">
         <?php echo form_dropdown("dept",$dept,set_value('dept',$before->dept));?>
-        <label>Department
+        <label>Department *
         </label>
       </div>
       <div class="input-field col s12 l3">
         <?php echo form_dropdown("personalloted",$personalloted,set_value('personalloted',$before->personalloted));?>
-        <label>Assigned to
+        <label>Assigned to *
         </label>
       </div>
-      <div class="input-field col s12 l3">
-        <label for="valueofwork">Value Of Work
-        </label>
-        <input type="text" id="valueofwork" name="valueofwork" value='<?php echo set_value('valueofwork',$before->valueofwork);?>'>
-      </div>
+      
       <div class="input-field col s12 l3">
         <label for="source">Source
         </label>
         <input type="text" id="source" name="source" value='<?php echo set_value('source',$before->source);?>'>
       </div>
       <div class="input-field col s12 l3 " id="typeofjob">
-        <label for="typeofjob">Type Of Job
+        <label for="typeofjob">Type Of Job *
         </label>
         <input type="text" readonly  value='<?php if($before->typeofjob == 1){
           $before->typeofjob ="One Time";
@@ -83,7 +80,7 @@ if($flag){
       <div class="input-field col s12 l3">
         <label for="periodicity">Periodicity
         </label>
-        <input type="text" id="periodicity" name="periodicity" value='<?php echo set_value('periodicity',$before->periodicity);?>'>
+        <input type="text" id="periodicity" readonly name="periodicity" value='<?php echo set_value('periodicity',$before->periodicity);?>'>
       </div>
       
       </div>
@@ -121,25 +118,30 @@ if($flag){
               <input type="text" id="invoicenumber" name="invoicenumber" value='<?php echo set_value('invoicenumber',$before->invoicenumber);?>'>
             </div> -->
             <div class="input-field col s12 l3">
-              <label for="fees">Fees
+              <label for="fees">Fees *
               </label>
-              <input type="text" id="fees" name="fees" value='<?php echo set_value('fees',$before->fees);?>'>
+              <input type="text" id="fees" name="fees" class="addTotalAmount" value='<?php echo set_value('fees',$before->fees);?>'>
             </div>
             <div class="input-field col s12 l3">
-              <label for="claims">Claims
+              <label for="claims">Claims *
               </label>
-              <input type="text" id="claims" name="claims" value='<?php echo set_value('claims',$before->claims);?>'>
+              <input type="text" id="claims" name="claims" class="addTotalAmount" value='<?php echo set_value('claims',$before->claims);?>'>
             </div>
             <div class="input-field col s12 l3">
-              <label for="vat">Vat
+              <label for="vat">Vat *
               </label>
-              <input type="text" id="vat" name="vat" value='<?php echo set_value('vat',$before->vat);?>'>
+              <input type="text" id="vat" name="vat" class="addTotalAmount"  value='<?php echo set_value('vat',$before->vat);?>'>
             </div>
             <div class="input-field col s12 l3">
+              <label for="valueofwork">Value Of Work
+              </label>
+              <input type="text" id="valueofwork" name="valueofwork" value='<?php echo set_value('valueofwork',$before->valueofwork);?>'>
+            </div>
+            <!-- <div class="input-field col s12 l3">
               <label for="amount">Amount
               </label>
               <input type="text" id="amount" name="amount" value='<?php echo set_value('amount',$before->amount);?>'>
-            </div>
+            </div> -->
             <div class="input-field col s12 l3">
               <label for="balance">Balance
               </label>
@@ -187,4 +189,10 @@ $(".shjobtype").hide();
     }
  
   });
+  var valueofwork = 0;
+  $( ".addTotalAmount" ).change(function() {
+    valueofwork = parseInt($('#fees').val())+ parseInt($('#claims').val())+parseInt($('#vat').val())
+    $('#valueofwork').val(valueofwork);
+    $('#balance').val(valueofwork);
+});
 </script>

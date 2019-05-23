@@ -158,8 +158,15 @@
 				<div class="col s2"><?php echo $singleJobNum->jobnumber;?></div>
 				<div class="col s2"><?php echo $singleJobNum->valueofwork;?></div>
 				<div class="col s2"><?php echo $singleJobNum->balance;?></div>
+				<?php if($singleJobNum->balance == 0) {
+					$readonlytext = 'readonly';
+					$placeholderText = 'No Balance Amount Left';
+				} else {
+					$readonlytext = '';
+					$placeholderText = 'Enter Amount';
+				}?>
 				<div class="col s2">
-					<input placeholder="Enter Amount" id="first_name" name="<?php echo "payment_".$singleJobNum->id;?>" type="text" required class="validate">
+					<input placeholder="<?php echo $placeholderText?>" <?php echo $readonlytext;?> id="<?php echo "payment_".$singleJobNum->id;?>" name="<?php echo "payment_".$singleJobNum->id;?>" type="text" required class="validate getamt">
 				</div>
 				
 			</div>
@@ -168,22 +175,30 @@
 				$i++;
 			}?>
 			<div class="row">
+				<div class="col s4" style="margin-right: 219px;">
+				<span id="totalsum"></span><br>
+					<span id="notetext" style="font-size: 14px;
+    color: red;"></span>
+				</div>
+			</div>
+			
+			<div class="row">
 					<div class="file-field input-field col s12 l3">
 						<div class="btn blue darken-4">
 						<span>Upload Invoice</span>
 						<input type="file" name="image">
 						</div>
 						<div class="file-path-wrapper">
-						<input class="file-path validate" type="text" placeholder="Upload Invoice" value='<?php echo set_value('image');?>'>
+						<input class="file-path validate" type="text" placeholder="Upload Invoice" value='<?php echo set_value('image');?>' required>
 						</div>
 					</div>
 					<div class="input-field col l3 s12">
-						<input id="icon_prefix" type="text" class="validate" name="invoiceamount" required>
-						<label for="icon_prefix">Total Invoice Amount</label>
+						<input id="invoiceamount" type="text" class="validate getinvamt" name="invoiceamount" required>
+						<label for="invoiceamount">Total Invoice Amount *</label>
 					</div>
 					<div class="input-field col l3 s12">
-						<input id="icon_prefix" type="text" class="validate" name="invoicenumber" required>
-						<label for="icon_prefix">Invoice Number</label>
+						<input id="invoicenumber" type="text" class="validate" name="invoicenumber" required>
+						<label for="invoicenumber">Invoice Number  *</label>
 					</div>
 			</div>
 			<div class="row">
@@ -194,10 +209,6 @@
 			</div>
 
 	</form>
-      <!-- <div class="col s3">6-columns (one-half)</div>
-      <div class="col s3">6-columns (one-half)</div>
-      <div class="col s3">6-columns (one-half)</div>
-	  <div class="col s3">6-columns (one-half)</div> -->
     </div>
 
 
@@ -206,10 +217,32 @@
 </body>
 </html>
 <script>
-         function showToast(message, duration) {
-            Materialize.toast(message, duration);
-         }
-      
-
+var totalsum = 0;
+var invamt = 0;
+$(document).on("change", ".getamt", function() {
+    var sum = 0;
+    $(".getamt").each(function(){
+        sum += +$(this).val();
+    });
+	$("#totalsum").html("Total Paid Amount is : "+sum);
+    totalsum = sum
+	if(totalsum && totalsum !=0 && invamt && invamt !=0){
+		if(totalsum != invamt){
+			$("#notetext").html("Please note : Paid amount and invoice amount is not same");
+		} else {
+			$("#notetext").html("");
+		}
+	}
+});
+$(document).on("change", ".getinvamt", function() {
+	 invamt = $('.getinvamt').val();
+	if(totalsum && totalsum !=0 && invamt && invamt !=0){
+		if(totalsum != invamt){
+			$("#notetext").html("Please note paid amount and invoice amount is not same");
+		} else {
+			$("#notetext").html("");
+		}
+	}
+});
 </script>
 

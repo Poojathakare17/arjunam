@@ -204,6 +204,7 @@ class User_model extends CI_Model
 		
 		return $return;
 	}
+	
 	public function getpaymentstatusdropdown()
 	{
 		$query=$this->db->query("SELECT * FROM `amsri_paymentstatus`  ORDER BY `id` ASC")->result();
@@ -216,6 +217,15 @@ class User_model extends CI_Model
 		}
 		
 		return $return;
+	}
+	public function check_email_avalibility($email) {
+		$query=$this->db->query("SELECT `email` FROM `user` WHERE `email`='$email'");
+		$num = $query->num_rows();
+		if($num > 0){
+			return true;
+		} else{
+			return false;
+		}
 	}
 	public function getdeptdropdown()
 	{

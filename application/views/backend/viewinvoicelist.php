@@ -28,7 +28,7 @@
         <td><?php echo $invoicelist[$i]->Jobnumber;?></td>
          <td><?php echo $invoicelist[$i]->invoicenumber;?></td>
         <!-- <td><?php echo $invoicelist[$i]->invoiceupload;?></td> -->
-        <td><a class='img-center' href='<?php echo base_url('uploads').'/'.$invoicelist[$i]->invoiceupload; ?>' ><img src='<?php echo base_url('uploads').'/'.$invoicelist[$i]->invoiceupload; ?>'></a></td>
+        <td><a class='img-center' style="padding-top: 30px;" href='<?php echo base_url('uploads').'/'.$invoicelist[$i]->invoiceupload; ?>' ><?php echo $invoicelist[$i]->invoiceupload;?></a></td>
         <td><?php echo $invoicelist[$i]->invoiceamount;?></td>
 
         <!-- <td><a class='tooltipped getid1' id="<?php echo $invoicelist[$i]->id;?>"  data-toggle="modal" data-target="#stdate"  data-position='top' data-delay='50' data-tooltip='Quick Edit'><i class='icon-table fa fa-bolt propericon blue-color'></i></a><a class='tooltipped' href='<?php echo site_url('site/edittransaction?id=').$invoicelist[$i]->id."&flag=1";?>' data-position='top' data-delay='50' data-tooltip='Edit'><i class='icon-table fa fa-pencil propericon green-icon'></i></a><a class='tooltipped' href='<?php echo site_url('site/deletetransaction?id=').$invoicelist[$i]->id."&flag=".$this->input->get('id'); ?>' data-position='top' data-delay='50' data-tooltip='Delete'><i class='icon-table material-icons propericon red-icon '>delete</i></a></td> -->

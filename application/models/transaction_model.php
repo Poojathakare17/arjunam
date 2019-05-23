@@ -41,9 +41,9 @@ public function getselectedjobnumberlist($ids) {
 }
 
 public function getchildtransactions($id) {
-    $query = $this->db->query("SELECT `amsri_transaction`.`id`, CONCAT('AM', LPAD(`amsri_transaction`.`id`, '5', '0')) as 'jobnumber', `amsri_transaction`.`created_date`, `amsri_client`.`projectname`, `amsri_transaction`.`due_date`,`amsri_transaction`.`balance`,`amsri_transaction`.`status`, `amsri_contact`.`name` as `personalloted`, `amsri_transaction`.`valueofwork`, `amsri_transaction`.`amount`,`amsri_transaction`.`status` FROM (`amsri_transaction`) 
+    $query = $this->db->query("SELECT `amsri_transaction`.`id`, CONCAT('AM', LPAD(`amsri_transaction`.`id`, '5', '0')) as 'jobnumber', `amsri_transaction`.`created_date`, `amsri_client`.`projectname`, `amsri_transaction`.`due_date`,`amsri_transaction`.`balance`,`amsri_transaction`.`status`, `user`.`name` as `personalloted`, `amsri_transaction`.`valueofwork`, `amsri_transaction`.`amount`,`amsri_transaction`.`status` FROM (`amsri_transaction`) 
     LEFT JOIN `amsri_client` ON `amsri_client`.`client_id`=`amsri_transaction`.`client_id` 
-    LEFT JOIN `amsri_contact` ON `amsri_contact`.`contact_id`=`amsri_transaction`.`personalloted` 
+    LEFT JOIN `user` ON `user`.`id`=`amsri_transaction`.`personalloted` 
     WHERE `amsri_transaction`.`id` = $id OR `amsri_transaction`.`parent` = $id")->result();
     return $query;
 }
@@ -133,8 +133,10 @@ public function edit($id,$client_id,$created_date,$due_date,$dept,$personalloted
 }
 public function delete($id)
 {
-    $query=$this->db->query("DELETE FROM `amsri_transaction` WHERE `id`='$id'");
-    return $query;
+    $query=$this->db->query("DELETE FROM `amsri_transaction` WHERE `id`='$id' OR `parent` = '$id'");
+    if(!$query)
+        return  0;
+    
 }
 public function getdropdown()
 {
@@ -151,13 +153,13 @@ public function getdropdown()
 }
 public function getamsristaffdropdown()
 {
-    $query=$this->db->query("SELECT * FROM `amsri_contact` WHERE `group`=2 ORDER BY `contact_id` ASC")->result();
+    $query=$this->db->query("SELECT * FROM `user` WHERE `status`=1 AND `accesslevel`=1 ORDER BY `name` ASC")->result();
     $return=array(
     "" => "Select Option"
     );
     foreach($query as $row)
     {
-    $return[$row->contact_id]=$row->name;
+    $return[$row->id]=$row->name;
     }
     return $return;
 }
@@ -223,19 +225,43 @@ public function getjobnumberdropdown(){
         foreach($postdata as $key=>$value) {
             if (strpos($key, 'payment') !== false)  {
                 //get id from each payment
-                $id = substr($key, 8);
-                //update amount in main table
-                $data=array("amount" => $value);
-                $this->db->where( "id", $id );
-                $updatequery=$this->db->update( "amsri_transaction", $data );
-                if(!$updatequery)
-                return  0;
 
-                $data=array("jobnumber" => $id,"invoiceid" => $invoiceid);
-                $insertjobnumber=$this->db->insert( "amsri_invoicejobnumber", $data );
-                $invoicejobnumberid=$this->db->insert_id();
-                if(!$invoicejobnumberid)
+                $id = substr($key, 8);
+                //get balance in maintable
+                $getjobdetails=$this->db->query("SELECT `balance`,`valueofwork`,`amount` FROM `amsri_transaction` WHERE `id`=$id")->row();
+                if(!$getjobdetails)
                 return  0;
+                $balance = $getjobdetails->balance;
+                $valueofwork =$getjobdetails->valueofwork;
+                if($balance != 0){
+                    $newbalance = abs($balance- $value); 
+                    // echo "new balance : ".$newbalance;
+                    // echo "type of new balance : ".gettype($newbalance);
+                    // die();
+                    if($newbalance == $valueofwork){
+                        $status = 1;
+                    } else if($newbalance < $valueofwork && $newbalance != 0){
+                        $status = 2;
+                    } else if($newbalance == 0 || $newbalance == 0.00){
+                        $status = 3;
+                    } else if($newbalance > $valueofwork){
+                        $status = 4;
+                    }
+                    // die();
+                    //update amount in main table
+                    $data=array("amount" => $value,"balance" => $newbalance, "status" => $status);
+                    $this->db->where( "id", $id );
+                    $updatequery=$this->db->update( "amsri_transaction", $data );
+                    if(!$updatequery)
+                    return  0;
+
+                    $data=array("jobnumber" => $id,"invoiceid" => $invoiceid);
+                    $insertjobnumber=$this->db->insert( "amsri_invoicejobnumber", $data );
+                    $invoicejobnumberid=$this->db->insert_id();
+                    if(!$invoicejobnumberid)
+                    return  0;
+                }
+                
             }   
 
         }

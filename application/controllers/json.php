@@ -536,4 +536,12 @@ public function test()
             echo "i = ".$i." created date ".$month_created_date." due date ".$month_due_date.'<br>';
         }
 }
+public function sub()
+{
+    $balance = 0.00;
+    if($balance == 0 || $balance == 0.00){
+        echo 'match';
+    }
+    echo gettype($balance);
+}
 } ?>

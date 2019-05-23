@@ -4,13 +4,14 @@
     </h4>
   </div>
 </div>
+<span class="validation-error"><?php echo $alerterror;?></span>
 <div class="row">
   <form class='col s12' method='post' action='<?php echo site_url("site/createtransactionsubmit");?>' enctype= 'multipart/form-data'>
     <input type="hidden" id="normal-field" class="form-control" name="id" value="<?php echo set_value('id',$before->id);?>" style="display:none;">
     <div class="row">
       <div class="input-field col l3 s12">
         <?php echo form_dropdown("client_id",$client_id,set_value('client_id'));?>
-        <label>Client Name
+        <label>Client Name *
         </label>
       </div>
       <div class="input-field col s12 l3">
@@ -24,20 +25,16 @@
         <input type="date" id="due_date" class="datepicker" name="due_date" value='<?php echo set_value('due_date');?>'>
       </div>
       <div class="input-field col s12 l3">
-        <?php echo form_dropdown("dept",$dept,set_value('dept'));?>
-        <label>Department
+        <?php echo form_dropdown("dept",$dept,set_value('dept'),'required="required"');?>
+        <label>Department *
         </label>
       </div>
       <div class="input-field col s12 l3">
         <?php echo form_dropdown("personalloted",$personalloted,set_value('personalloted'));?>
-        <label>Assigned to
+        <label>Assigned to *
         </label>
       </div>
-      <div class="input-field col s12 l3">
-        <label for="valueofwork">Value Of Work
-        </label>
-        <input type="text" id="valueofwork" name="valueofwork" value='<?php echo set_value('valueofwork');?>'>
-      </div>
+     
       <div class="input-field col s12 l3">
         <label for="source">Source
         </label>
@@ -49,13 +46,18 @@
         <!-- <div id="typeofjob"> -->
           <?php echo form_dropdown("typeofjob",$typeofjob,set_value('typeofjob'));?>
         <!-- </div> -->
-        <label for="typeofjob">Type Of Job
+        <label for="typeofjob">Type Of Job *
         </label>
+     
       </div>
       <div class="input-field col s12 l3 shjobtype">
         <?php echo form_dropdown("periodicity",$periodicity,set_value('periodicity'));?>
         <label for="periodicity">Periodicity
         </label>
+        <span style="font-size: 11px;
+        color:red;
+    position: absolute;
+    margin-top: -12px;">Note : Please Enter Periodicity If Type Of Job Is Periodic</span>
       </div>
     </div>
   
@@ -90,29 +92,33 @@
         <input type="text" id="invoicenumber" name="invoicenumber" value='<?php echo set_value('invoicenumber');?>'>
       </div> -->
       <div class="input-field col s12 l3">
-        <label for="fees">Fees
+        <label for="fees">Fees *
         </label>
-        <input type="text" id="fees" name="fees" value='<?php echo set_value('fees');?>'>
+        <input type="text" id="fees" class="getTotalValue" name="fees" value='<?php echo set_value('fees');?>' >
       </div>
       <div class="input-field col s12 l3">
-        <label for="claims">Claims
+        <label for="claims">Claims *
         </label>
-        <input type="text" id="claims" name="claims" value='<?php echo set_value('claims');?>'>
+        <input type="text" id="claims" class="getTotalValue" name="claims" value='<?php echo set_value('claims');?>' >
       </div>
       <div class="input-field col s12 l3">
-        <label for="vat">Vat
+        <label for="vat">Vat *
         </label>
-        <input type="text" id="vat" name="vat" value='<?php echo set_value('vat');?>'>
+        <input type="text" id="vat" class="getTotalValue" name="vat" value='<?php echo set_value('vat');?>' >
       </div>
       <div class="input-field col s12 l3">
-        <label for="amount">Amount Paid
-        </label>
-        <input type="text" id="amount" name="amount" value='<?php echo set_value('amount');?>'>
+        <input type="text" id="valueofwork" name="valueofwork" value='<?php echo set_value('valueofwork');?>'>
+        <span style="font-size: 11px;
+    position: absolute;
+    margin-top: -12px;">Value Of Work</span>
       </div>
       <div class="input-field col s12 l3">
-        <label for="balance">Balance
-        </label>
+        <!-- <label for="balance">Balance
+        </label> -->
         <input type="text" id="balance" name="balance" value='<?php echo set_value('balance');?>'>
+        <span style="font-size: 11px;
+    position: absolute;
+    margin-top: -12px;">Balance</span>
       </div>
     </div>
     <div class="row">
@@ -137,4 +143,13 @@ $(".shjobtype").hide();
     }
  
   });
+  $( ".getTotalValue" ).change(function() {
+    var fees = $('#fees').val();
+    var claims = $('#claims').val();
+    var vat = $('#vat').val();
+    var totalvalue = parseFloat(fees) + parseFloat(claims) + parseFloat(vat);
+    $('#valueofwork').val(totalvalue);
+    $('#balance').val(totalvalue);
+  
+});
 </script>

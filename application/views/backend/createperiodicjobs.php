@@ -171,9 +171,10 @@
   <div class="pad-left-15">
     <div class="col s12 m12">
       <div class="right">
-        <button class="waves-effect waves-light btn deep-orange lighten-3 " style="color:black;" onclick="changestatus(this.id)" id="1" >Open</button>
+      <button class="btn btn-primary waves-effect waves-light  blue darken-4" id="create-invoice" >Create Invoice</button>
+        <!-- <button class="waves-effect waves-light btn deep-orange lighten-3 " style="color:black;" onclick="changestatus(this.id)" id="1" >Open</button>
         <button class="waves-effect waves-light btn lime accent-2" style="color:black;" onclick="changestatus(this.id)" id="2" >Partial</button>
-        <button class="waves-effect waves-light btn green accent-1" style="color:black;" onclick="changestatus(this.id)" id="3" >Close</button>
+        <button class="waves-effect waves-light btn green accent-1" style="color:black;" onclick="changestatus(this.id)" id="3" >Close</button> -->
       </div>
     </div>
  
@@ -182,8 +183,9 @@
       <tr>
         <th scope="col">#</th>
         <th scope="col">Sr no</th>
-        <th scope="col">Job No</th>
+        <th scope="col">Jobs</th>
         <th scope="col">Client</th>
+        <th scope="col">Assigned to </th>
         <th scope="col">Start Dt</th>
         <th scope="col">Due Dt</th>
         <th scope="col">Value Of Work</th>
@@ -218,6 +220,7 @@
         <td scope="row"><?php echo $k;?></td>
         <td><?php echo $child[$i]->jobnumber;?></td>
         <td><?php echo $child[$i]->projectname;?></td>
+        <td><?php echo $child[$i]->personalloted;?></td>
          <td ><?php echo $child[$i]->created_date;?></td>
         <td><?php echo $child[$i]->due_date;?></td>
         <td><?php echo $child[$i]->valueofwork;?></td>
@@ -225,7 +228,9 @@
         <td><?php echo $child[$i]->balance;?></td>
         <td ><?php echo $child[$i]->status;?></td>
 
-        <td><a class='tooltipped getid1' id="<?php echo $child[$i]->id;?>"  data-toggle="modal" data-target="#stdate"  data-position='top' data-delay='50' data-tooltip='Quick Edit'><i class='icon-table fa fa-bolt propericon blue-color'></i></a><a class='tooltipped' href='<?php echo site_url('site/edittransaction?id=').$child[$i]->id."&flag=1";?>' data-position='top' data-delay='50' data-tooltip='Edit'><i class='icon-table fa fa-pencil propericon green-icon'></i></a><a class='tooltipped' href='<?php echo site_url('site/deletetransaction?id=').$child[$i]->id."&flag=".$this->input->get('id'); ?>' data-position='top' data-delay='50' data-tooltip='Delete'><i class='icon-table material-icons propericon red-icon '>delete</i></a></td>
+        <!-- <td><a class='tooltipped getid1' id="<?php echo $child[$i]->id;?>"  data-toggle="modal" data-target="#stdate"  data-position='top' data-delay='50' data-tooltip='Quick Edit'><i class='icon-table fa fa-bolt propericon blue-color'></i></a><a class='tooltipped' href='<?php echo site_url('site/edittransaction?id=').$child[$i]->id."&flag=1";?>' data-position='top' data-delay='50' data-tooltip='Edit'><i class='icon-table fa fa-pencil propericon green-icon'></i></a><a class='tooltipped' href='<?php echo site_url('site/deletetransaction?id=').$child[$i]->id."&flag=".$this->input->get('id'); ?>' data-position='top' data-delay='50' data-tooltip='Delete'><i class='icon-table material-icons propericon red-icon '>delete</i></a></td> -->
+
+        <td><a class='tooltipped getid1' id="<?php echo $child[$i]->id;?>"  data-toggle="modal" data-target="#stdate"  data-position='top' data-delay='50' data-tooltip='Quick Edit'><i class='icon-table fa fa-bolt propericon blue-color'></i></a></td>
       </tr>
     <?php $k++; }?>
     </tbody>
@@ -246,28 +251,18 @@
           <form id="myForm" action="<?php echo site_url("site/submitSubJobDetails");?>" method="post">
           <div class="container col-md-12" style="padding-top: 8px;">
           <input type="hidden" name="id"  id="id" value="<?php echo set_value('id',$before->id);?>">
-            <div class="">
+            <div class="row">
               <label for="created_date">Start Date:
-              <input type="text" class="datepicker" name="created_date"  id="created_date" value="<?php echo set_value('created_date',$before->created_date);?>"></label>
-            </div>
-            <div class="">
+              <input type="date"  name="created_date"  id="created_date" value="<?php echo set_value('created_date',$before->created_date);?>"></label>
               <label for="due_date">End Date:
-              <input type="text" class="datepicker" name="due_date"  id="due_date" value="<?php echo set_value('due_date',$before->due_date);?>">
+              <input type="date"  name="due_date"  id="due_date" value="<?php echo set_value('due_date',$before->due_date);?>">
               </label></div>
-            <div class="">
-              <label for="amount">Amount:</label>
-              <input type="text"  id="amount" name="amount" value="<?php echo set_value('amount',$before->amount);?>">
-            </div>
-            <div class="">
-              <label for="balance">Balance:</label>
-              <input type="text"  id="balance" name="balance" value="<?php echo set_value('balance',$before->balance);?>">
-            </div>
-            <div class="">
+              <!-- <div class="">
               <label>Description:</label>
               <textarea  id="description" name="description" class="materialize-textarea" placeholder="Enter text ...">
               <?php echo set_value( 'description',$before->description);?>
             </textarea>
-            </div>
+            </div> -->
         </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -283,6 +278,7 @@
 </body>
 </html>
 <script>
+ 
 $( document ).ready(function() {
             $( ".getid1" ).click(function() {
               var id1 = $(this).attr("id");
@@ -331,6 +327,18 @@ function changestatus(getbuttonvalue){
             }
         }
 }
+
+$("#create-invoice").click(function() {
+        if(inputCheckArray.length!=0) {
+                for(var i=0;i<inputCheckArray.length; i++){
+                ids.push(inputCheckArray[i]['id']);
+            }
+            window.location.href = "redirectToInvoice?id="+ ids;
+        } else if(selectallid.length !=0){
+            window.location.href = "redirectToInvoice?id="+ selectallid;
+
+        }
+    });
 
     function ajaxCall(ids,getbuttonvalue) {
         console.log("ids "+ids);

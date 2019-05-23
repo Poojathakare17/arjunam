@@ -77,17 +77,22 @@ class Site extends CI_Controller
 		$access = array("1");
         $this->checkaccess($access);
         $this->form_validation->set_rules('name','Name','trim|required|max_length[30]');
-		$this->form_validation->set_rules('email','Email','trim|required|valid_email');
+        $this->form_validation->set_rules('email','Email','trim|required|valid_email');
+        $this->form_validation->set_rules('password','Password','trim|required');
+        $this->form_validation->set_rules('mobile','Mobile','trim|required');
+        $this->form_validation->set_rules('accesslevel','Access Level','trim|required');
+        $this->form_validation->set_rules('dept','Department','trim|required');
 		if($this->form_validation->run() == FALSE)	
 		{
 			$data['alerterror'] = validation_errors();
             $data['gender']=$this->user_model->getgenderdropdown();
-			$data['accesslevel']=$this->user_model->getaccesslevels();
+            $data['accesslevel']=$this->user_model->getaccesslevels();
+            $data[ 'dept' ] =$this->user_model->getdeptdropdown();
             $data[ 'status' ] =$this->user_model->getstatusdropdown();
             $data[ 'logintype' ] =$this->user_model->getlogintypedropdown();
             $data[ 'page' ] = 'createuser';
             $data[ 'title' ] = 'Create User';
-            print_r($data);
+            // $data['alerterror']="New user could not be created.";
             $this->load->view( 'template', $data );	
 		}
 		else
@@ -137,7 +142,16 @@ class Site extends CI_Controller
 			$data['redirect']="site/viewusers";
 			$this->load->view("redirect",$data);
 		}
-	}
+    }
+    function check_email_avalibility(){
+        $email = $this->input->get_post('email');
+        $emailstatus=$this->user_model->check_email_avalibility($email);
+        if($emailstatus){
+            echo "<span style='color:red; padding-left: 15px;'>Email already exist</span>";
+        } else {
+            echo "<span style='color:green; padding-left: 15px;'>Email available</span>";
+        }
+    }
     function viewusers()
 	{
 		$access = array("1");
@@ -245,23 +259,20 @@ class Site extends CI_Controller
 	{
 		$access = array("1");
 		$this->checkaccess($access);
-		
-		$this->form_validation->set_rules('name','Name','trim|required|max_length[30]');
-		$this->form_validation->set_rules('email','Email','trim|required|valid_email');
-		$this->form_validation->set_rules('password','Password','trim|min_length[6]|max_length[30]');
-		$this->form_validation->set_rules('confirmpassword','Confirm Password','trim|matches[password]');
-		$this->form_validation->set_rules('accessslevel','Accessslevel','trim');
-		$this->form_validation->set_rules('status','status','trim|');
-		$this->form_validation->set_rules('socialid','Socialid','trim');
-		$this->form_validation->set_rules('logintype','logintype','trim');
-		$this->form_validation->set_rules('json','json','trim');
+        $this->form_validation->set_rules('name','Name','trim|required|max_length[30]');
+        $this->form_validation->set_rules('email','Email','trim|required|valid_email');
+        $this->form_validation->set_rules('password','Password','trim|required');
+        $this->form_validation->set_rules('mobile','Mobile','trim|required');
+        $this->form_validation->set_rules('accesslevel','Access Level','trim|required');
+        $this->form_validation->set_rules('dept','Department','trim|required');
 		if($this->form_validation->run() == FALSE)	
 		{
 			$data['alerterror'] = validation_errors();
 			$data[ 'status' ] =$this->user_model->getstatusdropdown();
+            $data['accesslevel']=$this->user_model->getaccesslevels();
             $data['gender']=$this->user_model->getgenderdropdown();
-			$data['accesslevel']=$this->user_model->getaccesslevels();
             $data[ 'logintype' ] =$this->user_model->getlogintypedropdown();
+            $data[ 'dept' ] =$this->user_model->getdeptdropdown();
 			$data['before']=$this->user_model->beforeedit($this->input->post('id'));
 			$data['page']='edituser';
 //			$data['page2']='block/userblock';
@@ -1406,7 +1417,7 @@ $elements=array();
 $elements[0]=new stdClass();
 $elements[0]->field="CONCAT('AM',LPAD(`amsri_transaction`.`id`,5,0))";
 $elements[0]->sort="1";
-$elements[0]->header="Job No";
+$elements[0]->header="Jobs";
 $elements[0]->alias="jobnumber";
 
 $elements[1]=new stdClass();
@@ -1422,7 +1433,7 @@ $elements[2]->header="Start Date";
 $elements[2]->alias="created_date";
 
 $elements[3]=new stdClass();
-$elements[3]->field="`amsri_contact`.`name`";
+$elements[3]->field="`user`.`name`";
 $elements[3]->sort="1";
 $elements[3]->header="Assigned to";
 $elements[3]->alias="personalloted";
@@ -1460,8 +1471,14 @@ $elements[8]->alias="typeofjob";
 $elements[9]=new stdClass();
 $elements[9]->field="`amsri_transaction`.`status`";
 $elements[9]->sort="1";
-$elements[9]->header="status";
+$elements[9]->header="Status";
 $elements[9]->alias="status";
+
+$elements[10]=new stdClass();
+$elements[10]->field="`amsri_transaction`.`balance`";
+$elements[10]->sort="1";
+$elements[10]->header="Balance";
+$elements[10]->alias="balance";
 
 
 $search=$this->input->get_post("search");
@@ -1478,7 +1495,7 @@ if($orderby=="")
 $orderby="id";
 $orderorder="ASC";
 }
-$data["message"]=$this->chintantable->query($pageno,$maxrow,$orderby,$orderorder,$search,$elements,"FROM `amsri_transaction` LEFT JOIN `amsri_client` ON `amsri_client`.`client_id`=`amsri_transaction`.`client_id` LEFT JOIN `amsri_contact` ON `amsri_contact`.`contact_id`=`amsri_transaction`.`personalloted`","WHERE `parent` IS NULL OR `parent` =0");
+$data["message"]=$this->chintantable->query($pageno,$maxrow,$orderby,$orderorder,$search,$elements,"FROM `amsri_transaction` LEFT JOIN `amsri_client` ON `amsri_client`.`client_id`=`amsri_transaction`.`client_id` LEFT JOIN `user` ON `user`.`id`=`amsri_transaction`.`personalloted`","WHERE `parent` IS NULL OR `parent` =0");
 $this->load->view("json",$data);
 }
 
@@ -1500,20 +1517,24 @@ public function createtransactionsubmit()
 {
 $access=array("1");
 $this->checkaccess($access);
-$this->form_validation->set_rules("transaction_id","transaction_id","trim");
-$this->form_validation->set_rules("contact_id","Contact id","trim");
-$this->form_validation->set_rules("client_id","client_id","trim");
-$this->form_validation->set_rules("amount","Amount","trim");
-$this->form_validation->set_rules("invoice","invoice","trim");
-$this->form_validation->set_rules("date","Date","trim");
-$this->form_validation->set_rules("status","Status","trim");
-$this->form_validation->set_rules("message","Message","trim");
-$this->form_validation->set_rules("timestamp","timestamp","trim");
+$this->form_validation->set_rules("client_id","Client Name","trim|required");
+$this->form_validation->set_rules("dept","Department","trim|required");
+$this->form_validation->set_rules("personalloted","Assigned to","trim|required");
+$this->form_validation->set_rules("typeofjob","Type of Job","trim|required");
+$this->form_validation->set_rules("fees","Fees","trim|required");
+$this->form_validation->set_rules("claims","Claims","trim|required");
+$this->form_validation->set_rules("vat","Vat","trim|required");
 if($this->form_validation->run()==FALSE)
 {
 $data["alerterror"]=validation_errors();
 $data["page"]="createtransaction";
 $data["title"]="Create transaction";
+$data["client_id"]=$this->client_model->getdropdown();
+$data["personalloted"]=$this->transaction_model->getamsristaffdropdown();
+$data["dept"]=$this->user_model->getdeptdropdown();
+$data[ 'status' ] =$this->user_model->getstatusdropdown();
+$data[ 'typeofjob' ] =$this->user_model->gettypeofjobdropdown();
+$data[ 'periodicity' ] =$this->user_model->getperiodicitydropdown();
 $this->load->view("template",$data);
 }
 else
@@ -1606,20 +1627,24 @@ public function edittransactionsubmit()
 {
 $access=array("1");
 $this->checkaccess($access);
-$this->form_validation->set_rules("transaction_id","transaction_id","trim");
-$this->form_validation->set_rules("personalloted","Contact id","trim");
-$this->form_validation->set_rules("client_id","client_id","trim");
-$this->form_validation->set_rules("amount","Amount","trim");
-$this->form_validation->set_rules("invoice","invoice","trim");
-$this->form_validation->set_rules("date","Date","trim");
-$this->form_validation->set_rules("status","Status","trim");
-$this->form_validation->set_rules("message","Message","trim");
-$this->form_validation->set_rules("timestamp","timestamp","trim");
+$this->form_validation->set_rules("client_id","Client Name","trim|required");
+$this->form_validation->set_rules("dept","Department","trim|required");
+$this->form_validation->set_rules("personalloted","Assigned to","trim|required");
+$this->form_validation->set_rules("typeofjob","Type of Job","trim|required");
+$this->form_validation->set_rules("fees","Fees","trim|required");
+$this->form_validation->set_rules("claims","Claims","trim|required");
+$this->form_validation->set_rules("vat","Vat","trim|required");
 if($this->form_validation->run()==FALSE)
 {
 $data["alerterror"]=validation_errors();
 $data["page"]="edittransaction";
 $data["title"]="Edit transaction";
+$data[ 'status' ] =$this->user_model->getstatusdropdown();
+$data["dept"]=$this->user_model->getdeptdropdown();
+$data["client_id"]=$this->client_model->getdropdown();
+$data["personalloted"]=$this->transaction_model->getamsristaffdropdown();
+$data[ 'typeofjob' ] =$this->user_model->gettypeofjobdropdown();
+$data[ 'periodicity' ] =$this->user_model->getperiodicitydropdown();
 $data["before"]=$this->transaction_model->beforeedit($this->input->get("id"));
 $this->load->view("template",$data);
 }
@@ -1692,7 +1717,6 @@ $data["alerterror"]="New transaction could not be Updated.";
         $data["redirect"]="site/viewtransaction";
         $this->load->view("redirect",$data);
     }
-
     }
 }
 public function deletetransaction()
@@ -1877,9 +1901,6 @@ public function createinvoicelistsubmit()
 {
     $access=array("1");
     $this->checkaccess($access);
-    // print_r($_POST);
-    // echo "before upload";
-    // $image=$this->input->get_post("image");
     $config['upload_path'] = './uploads/';
     $config['allowed_types'] = 'gif|jpg|png|jpeg';
     $this->load->library('upload', $config);
